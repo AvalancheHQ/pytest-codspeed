@@ -8,7 +8,7 @@ on:
 
 jobs:
   benchmarks:
-    runs-on: ubuntu-latest
+    runs-on: [codspeed-macro, linux, arm64]
     steps:
       - uses: actions/checkout@v4
         with:
@@ -23,3 +23,5 @@ jobs:
         uses: CodSpeedHQ/action@main
         with:
           run: pytest tests/benchmarks/ --codspeed
+          upload-url: ${{ secrets.CODSPEED_UPLOAD_URL }}/upload
+          runner-version: 3.1.0-beta.2
