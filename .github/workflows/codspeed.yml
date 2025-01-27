@@ -13,6 +13,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: "recursive"
+          ref: ${{ github.event.pull_request.head.sha }}
       - name: Set up Python 3.12
         uses: actions/setup-python@v2
         with:
@@ -24,4 +25,3 @@ jobs:
         with:
           run: pytest tests/benchmarks/ --codspeed
           upload-url: ${{ secrets.CODSPEED_UPLOAD_URL }}/upload
-          runner-version: 3.1.0-beta.2
