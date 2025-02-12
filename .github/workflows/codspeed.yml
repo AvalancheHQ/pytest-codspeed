@@ -7,7 +7,53 @@ on:
   workflow_dispatch:
 
 jobs:
-  benchmarks:
+  the-algorithms-benchmarks-instrumentation:
+    name: "Run TheAlgorithms Benchmarks Instrumentation"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: "recursive"
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.12"
+      - name: Install local version of pytest-codspeed
+        run: pip install .
+      - name: Run the action
+        uses: CodSpeedHQ/action@cod-447-compute-run-and-runpart-identifiers-and-metadata-in-the
+        with:
+          run: pytest tests/benchmarks/TheAlgorithms_bench --codspeed
+          upload-url: ${{ secrets.CODSPEED_UPLOAD_URL }}/upload
+          runner-version: '3.2.3-beta.2'
+
+  other-benchmarks-instrumentation:
+    name: "Run Other Benchmarks Instrumentation"
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        file:
+          - 'tests/benchmarks/test_bench_fibo.py'
+          - 'tests/benchmarks/test_bench_syscalls.py'
+          - 'tests/benchmarks/test_bench_various_noop.py'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: "recursive"
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.12"
+      - name: Install local version of pytest-codspeed
+        run: pip install .
+      - name: Run the action
+        uses: CodSpeedHQ/action@cod-447-compute-run-and-runpart-identifiers-and-metadata-in-the
+        with:
+          run: pytest ${{ matrix.file }} --codspeed
+          upload-url: ${{ secrets.CODSPEED_UPLOAD_URL }}/upload
+          runner-version: '3.2.3-beta.2'
+
+  walltime-benchmarks:
     runs-on: codspeed-macro-staging
     steps:
       - uses: actions/checkout@v4
@@ -24,4 +70,4 @@ jobs:
         with:
           run: pytest tests/benchmarks/ --codspeed
           upload-url: ${{ secrets.CODSPEED_UPLOAD_URL }}/upload
-          runner-version: 3.1.0-beta.2
+          runner-version: '3.2.3-beta.2'
