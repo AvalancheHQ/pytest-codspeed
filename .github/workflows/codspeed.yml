@@ -22,6 +22,6 @@ jobs:
       - name: Run benchmarks
         uses: CodSpeedHQ/action@main
         with:
-          run: pytest tests/benchmarks/ --codspeed
+          run: pytest tests/benchmarks --codspeed --codspeed-max-rounds=10 --codspeed-warmup-time=0.2
           upload-url: ${{ secrets.CODSPEED_UPLOAD_URL }}/upload
           runner-version: 3.1.0-beta.2
